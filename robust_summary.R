@@ -15,7 +15,7 @@ summary.lm <- function (object, correlation = FALSE, symbolic.cor = FALSE, robus
     }
     
     # inverse(X'X)
-    XX1 <- solve(t(X)%*%X)
+    XX1 <- solve(t(X)%*%X,tol = 1e-100)
     
     # Variance calculation (Bread x meat x Bread)
     varcovar <- XX1 %*% XDX %*% XX1
