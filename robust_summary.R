@@ -3,7 +3,7 @@ summary.lm <- function (object, correlation = FALSE, symbolic.cor = FALSE, robus
 {
   if(robust==TRUE){ 
     #extention to for robust standard errors
-    s <- summary(object)
+    s <- stats::summary.lm(object)
     X <- model.matrix(object)
     u2 <- residuals(object)^2
     XDX <- 0
