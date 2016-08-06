@@ -1,7 +1,7 @@
 summary.lm <- function (object, correlation = FALSE, symbolic.cor = FALSE, robust=TRUE,
           ...) 
 {
-  if(robust=TRUE){ 
+  if(robust==TRUE){ 
     #extention to for robust standard errors
     s <- summary(object)
     X <- model.matrix(object)
