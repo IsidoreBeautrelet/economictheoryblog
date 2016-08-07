@@ -1,6 +1,5 @@
 summary.lm <- function (object, correlation = FALSE, 
-symbolic.cor = FALSE, robust=FALSE,...) 
-{
+symbolic.cor = FALSE, robust=FALSE,...) {
 # add extension for robust standard errors
   if(robust==TRUE){ 
     # save variable that are necessary to calcualte robust sd
