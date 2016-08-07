@@ -1,4 +1,4 @@
-summary.lm <- function (object, correlation = FALSE, symbolic.cor = FALSE, robust=TRUE,
+summary.lm <- function (object, correlation = FALSE, symbolic.cor = FALSE, robust=FALSE,
                          ...) 
 {
   if(robust==TRUE){ 
