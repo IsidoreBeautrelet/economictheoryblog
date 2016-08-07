@@ -1,14 +1,14 @@
-summary.lm <- function (object, correlation = FALSE, symbolic.cor = FALSE, robust=FALSE,
-                         ...) 
+summary.lm <- function (object, correlation = FALSE, 
+symbolic.cor = FALSE, robust=FALSE,...) 
 {
+# add extension for robust standard errors
   if(robust==TRUE){ 
-    #extention to for robust standard errors
-    #     s <- stats::summary.lm(object)
+    # save variable that are necessary to calcualte robust sd
     X <- model.matrix(object)
     u2 <- residuals(object)^2
     XDX <- 0
     
-    ## Here one needs to calculate X'DX. But due to the fact that
+    ## One needs to calculate X'DX. But due to the fact that
     ## D is huge (NxN), it is better to do it with a cycle.
     for(i in 1:nrow(X)) {
       XDX <- XDX + u2[i]*X[i,]%*%t(X[i,])
@@ -17,15 +17,15 @@ summary.lm <- function (object, correlation = FALSE, symbolic.cor = FALSE, robus
     # inverse(X'X)
     XX1 <- solve(t(X)%*%X,tol = 1e-100)
     
-    # Variance calculation (Bread x meat x Bread)
+    # Sandwich Variance calculation (Bread x meat x Bread)
     varcovar <- XX1 %*% XDX %*% XX1
     
-    # degrees of freedom adjustment
-    dfc <- sqrt(nrow(X))/sqrt(nrow(X)-ncol(X))
+    # adjust degrees of freedom 
+    dfc_r <- sqrt(nrow(X))/sqrt(nrow(X)-ncol(X))
     
     # Standard errors of the coefficient estimates are the
     # square roots of the diagonal elements
-    rstdh <- dfc*sqrt(diag(varcovar))
+    rstdh <- dfc_r*sqrt(diag(varcovar))
   }
   
   z <- object
