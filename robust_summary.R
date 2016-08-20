@@ -38,14 +38,14 @@ summary.lm <- function (object, correlation = FALSE,
     
     if(length(cluster)==1){
       cluster <- dat[,cluster]
-    require(sandwich, quietly = TRUE)
-    M <- length(unique(cluster))
-    N <- length(cluster)
-    K <- object$rank
-    dfc <- (M/(M-1))*((N-1)/(N-K))
-    uj  <- na.omit(apply(estfun(object),2, function(x) tapply(x, cluster, sum)));
-    vcovCL <- dfc*sandwich(object, meat=crossprod(uj)/N)
-    rstdh <- sqrt(diag(vcovCL))
+      require(sandwich, quietly = TRUE)
+      M <- length(unique(cluster))
+      N <- length(cluster)
+      K <- object$rank
+      dfc <- (M/(M-1))*((N-1)/(N-K))
+      uj  <- na.omit(apply(estfun(object),2, function(x) tapply(x, cluster, sum)));
+      vcovCL <- dfc*sandwich(object, meat=crossprod(uj)/N)
+      rstdh <- sqrt(diag(vcovCL))
     } 
     if(length(cluster)==2){
       library(sandwich,quietly = TRUE)
@@ -155,6 +155,24 @@ summary.lm <- function (object, correlation = FALSE,
                                                        df.int)/rdf)
     ans$fstatistic <- c(value = (mss/(p - df.int))/resvar, 
                         numdf = p - df.int, dendf = rdf)
+    if(robust==T){
+      pos_coef <- match(names(z$coefficients)[-match("(Intercept)",
+                                                     names(z$coefficients))],
+                        names(z$coefficients))
+      
+      P_m <- matrix(z$coefficients[pos_coef])
+      
+      R_m <- diag(1, 
+                length(pos_coef), 
+                length(pos_coef))
+      
+      ans$fstatistic <- c(value = t(R_m%*%P_m)%*%
+                            (solve(varcovar[pos_coef,pos_coef],tol = 1e-100))%*%
+                            (R_m%*%P_m)/(p - df.int), 
+                          numdf = p - df.int, dendf = rdf)
+      
+    }
+
   }
   else ans$r.squared <- ans$adj.r.squared <- 0
   ans$cov.unscaled <- R
