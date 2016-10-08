@@ -1,3 +1,10 @@
+# Code for Economic Theory Blog
+#
+# economictheoryblog.com
+#
+# August 2016
+# a.d.
+
 summary.lm <- function (object, correlation = FALSE, 
                         symbolic.cor = FALSE, robust=FALSE,
                         cluster=c(NULL,NULL),...) {
