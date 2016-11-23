@@ -6,8 +6,8 @@
 # a.d.
 
 summary.lm <- function (object, correlation = FALSE, 
-                        symbolic.cor = FALSE, robust=FALSE,
-                        cluster=c(NULL,NULL),...) {
+                       symbolic.cor = FALSE, robust=FALSE,
+                       cluster=c(NULL,NULL),...) {
   # add extension for robust standard errors
   if(robust==TRUE){ 
     # save variable that are necessary to calcualte robust sd
@@ -51,8 +51,8 @@ summary.lm <- function (object, correlation = FALSE,
       K <- object$rank
       dfc <- (M/(M-1))*((N-1)/(N-K))
       uj  <- na.omit(apply(estfun(object),2, function(x) tapply(x, cluster, sum)));
-      vcovCL <- dfc*sandwich(object, meat=crossprod(uj)/N)
-      rstdh <- sqrt(diag(vcovCL))
+      varcovar <- dfc*sandwich(object, meat=crossprod(uj)/N)
+      rstdh <- sqrt(diag(varcovar))
     } 
     if(length(cluster)==2){
       library(sandwich,quietly = TRUE)
@@ -73,8 +73,8 @@ summary.lm <- function (object, correlation = FALSE,
       vc1   <-  dfc1*sandwich(fm, meat=crossprod(u1j)/N )
       vc2   <-  dfc2*sandwich(fm, meat=crossprod(u2j)/N )
       vc12  <- dfc12*sandwich(fm, meat=crossprod(u12j)/N)
-      vcovMCL <- vc1 + vc2 - vc12
-      rstdh <- sqrt(diag(vcovMCL))
+      varcovar <- vc1 + vc2 - vc12
+      rstdh <- sqrt(diag(varcovar))
     } 
     
   }
@@ -133,7 +133,7 @@ summary.lm <- function (object, correlation = FALSE,
   }
   resvar <- rss/rdf
   if (is.finite(resvar) && resvar < (mean(f)^2 + var(f)) * 
-        1e-30) 
+      1e-30) 
     warning("essentially perfect fit: summary may be unreliable")
   p1 <- 1L:p
   R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
@@ -162,7 +162,8 @@ summary.lm <- function (object, correlation = FALSE,
                                                        df.int)/rdf)
     ans$fstatistic <- c(value = (mss/(p - df.int))/resvar, 
                         numdf = p - df.int, dendf = rdf)
-    if(robust==T){
+    if(robust==T|(!is.null(cluster))){
+      if(!is.null(cluster)){rdf <- M-1}
       pos_coef <- match(names(z$coefficients)[-match("(Intercept)",
                                                      names(z$coefficients))],
                         names(z$coefficients))
@@ -170,8 +171,8 @@ summary.lm <- function (object, correlation = FALSE,
       P_m <- matrix(z$coefficients[pos_coef])
       
       R_m <- diag(1, 
-                length(pos_coef), 
-                length(pos_coef))
+                  length(pos_coef), 
+                  length(pos_coef))
       
       ans$fstatistic <- c(value = t(R_m%*%P_m)%*%
                             (solve(varcovar[pos_coef,pos_coef],tol = 1e-100))%*%
@@ -179,7 +180,7 @@ summary.lm <- function (object, correlation = FALSE,
                           numdf = p - df.int, dendf = rdf)
       
     }
-
+    
   }
   else ans$r.squared <- ans$adj.r.squared <- 0
   ans$cov.unscaled <- R
