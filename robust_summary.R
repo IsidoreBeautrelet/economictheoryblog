@@ -63,16 +63,16 @@ summary.lm <- function (object, correlation = FALSE,
       M2  <- length(unique(cluster2))   
       M12 <- length(unique(cluster12))
       N   <- length(cluster1)          
-      K   <- fm$rank             
+      K   <- object$rank             
       dfc1  <- (M1/(M1-1))*((N-1)/(N-K))  
       dfc2  <- (M2/(M2-1))*((N-1)/(N-K))  
       dfc12 <- (M12/(M12-1))*((N-1)/(N-K))  
-      u1j   <- apply(estfun(fm), 2, function(x) tapply(x, cluster1,  sum)) 
-      u2j   <- apply(estfun(fm), 2, function(x) tapply(x, cluster2,  sum)) 
-      u12j  <- apply(estfun(fm), 2, function(x) tapply(x, cluster12, sum)) 
-      vc1   <-  dfc1*sandwich(fm, meat=crossprod(u1j)/N )
-      vc2   <-  dfc2*sandwich(fm, meat=crossprod(u2j)/N )
-      vc12  <- dfc12*sandwich(fm, meat=crossprod(u12j)/N)
+      u1j   <- apply(estfun(object), 2, function(x) tapply(x, cluster1,  sum)) 
+      u2j   <- apply(estfun(object), 2, function(x) tapply(x, cluster2,  sum)) 
+      u12j  <- apply(estfun(object), 2, function(x) tapply(x, cluster12, sum)) 
+      vc1   <-  dfc1*sandwich(object, meat=crossprod(u1j)/N )
+      vc2   <-  dfc2*sandwich(object, meat=crossprod(u2j)/N )
+      vc12  <- dfc12*sandwich(object, meat=crossprod(u12j)/N)
       varcovar <- vc1 + vc2 - vc12
       rstdh <- sqrt(diag(varcovar))
     } 
