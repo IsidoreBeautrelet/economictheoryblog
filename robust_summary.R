@@ -46,7 +46,7 @@ summary.lm <- function (object, correlation = FALSE,
     if(length(cluster)==1){
       cluster <- dat[,cluster]
       require(sandwich, quietly = TRUE)
-      M <- length(unique(cluster))
+      M <- res_lenght <- length(unique(cluster))
       N <- length(cluster)
       K <- object$rank
       dfc <- (M/(M-1))*((N-1)/(N-K))
@@ -61,7 +61,7 @@ summary.lm <- function (object, correlation = FALSE,
       cluster12 = paste(cluster1,cluster2, sep="")
       M1  <- length(unique(cluster1))
       M2  <- length(unique(cluster2))   
-      M12 <- length(unique(cluster12))
+      M12 <- res_length <-length(unique(cluster12))
       N   <- length(cluster1)          
       K   <- object$rank             
       dfc1  <- (M1/(M1-1))*((N-1)/(N-K))  
@@ -163,7 +163,7 @@ summary.lm <- function (object, correlation = FALSE,
     ans$fstatistic <- c(value = (mss/(p - df.int))/resvar, 
                         numdf = p - df.int, dendf = rdf)
     if(robust==T|(!is.null(cluster))){
-      if(!is.null(cluster)){rdf <- M12-1}
+      if(!is.null(cluster)){rdf <- res_length -1}
       pos_coef <- match(names(z$coefficients)[-match("(Intercept)",
                                                      names(z$coefficients))],
                         names(z$coefficients))
