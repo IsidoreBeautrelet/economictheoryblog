@@ -40,7 +40,7 @@ summary.lm <- function (object, correlation = FALSE,
     n_coef <- all.vars(object$call)[-length(all.vars(object$call))]
     dat <- na.omit(get(all.vars(object$call)[length(all.vars(object$call))])[,c(n_coef,cluster)])
     if(nrow(dat)<nrow(object$model)){stop("Not all observation have a cluster.")}
-    if(length(cluster)==""){stop("No variable for clustering provided.")}
+    if(cluster[1]==""){stop("No variable for clustering provided.")}
     if(length(cluster)>2){stop("The function only allows max. 2 clusters. You provided more.")}
     
     if(length(cluster)==1){
