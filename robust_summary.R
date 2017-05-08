@@ -46,7 +46,7 @@ summary.lm <- function (object, correlation = FALSE,
     if(length(cluster)==1){
       cluster <- dat[,cluster]
       require(sandwich, quietly = TRUE)
-      M <- res_lenght <- length(unique(cluster))
+      M <- res_length <- length(unique(cluster))
       N <- length(cluster)
       K <- object$rank
       dfc <- (M/(M-1))*((N-1)/(N-K))
