@@ -5,6 +5,7 @@
 # August 2016
 # a.d.
 
+
 summary.lm <- function (object, correlation = FALSE, 
                         symbolic.cor = FALSE, robust=FALSE,
                         cluster=c(NULL,NULL),...) {
@@ -39,11 +40,10 @@ summary.lm <- function (object, correlation = FALSE,
   if(!is.null(cluster)&robust==F){
     if(""%in%cluster){stop("No variable for clustering provided.")}
     if(length(cluster)>2){stop("The function only allows max. 2 clusters. You provided more.")}
-    n_coef <- all.vars(object$call)[-length(all.vars(object$call))]
+    n_coef <- all.vars(object$call$formula)
     if(length(cluster)==1){
-      dat <- na.omit(get(all.vars(object$call)[length(all.vars(object$call))])[,c(n_coef,cluster)])
+      dat <- na.omit(get(paste(object$call$data))[,c(n_coef,cluster)])
       if(nrow(dat)<nrow(object$model)){stop("Not all observation have a cluster.")}
-      
       cluster <- dat[,cluster]
       require(sandwich, quietly = TRUE)
       M <- res_length <- length(unique(cluster))
@@ -55,12 +55,12 @@ summary.lm <- function (object, correlation = FALSE,
       rstdh <- sqrt(diag(varcovar))
     } 
     if(length(cluster)==2){
-      dat_1 <- na.omit(get(all.vars(object$call)[length(all.vars(object$call))])[,c(n_coef,cluster[1])])
+      dat_1 <- na.omit(get(paste(object$call$data))[,c(n_coef,cluster[1])])
       if(nrow(dat_1)<nrow(object$model)){stop("Not all observation have a cluster.")}
-      dat_2 <- na.omit(get(all.vars(object$call)[length(all.vars(object$call))])[,c(n_coef,cluster[2])])
+      dat_2 <- na.omit(get(paste(object$call$data))[,c(n_coef,cluster[2])])
       if(nrow(dat_2)<nrow(object$model)){stop("Not all observation have a cluster.")}
       
-      dat <- na.omit(get(all.vars(object$call)[length(all.vars(object$call))])[,c(n_coef,cluster)])
+      dat <- na.omit(get(paste(object$call$data))[,c(n_coef,cluster)])
       library(sandwich,quietly = TRUE)
       cluster1 <- dat[,cluster[1]]
       cluster2 <- dat[,cluster[2]]
