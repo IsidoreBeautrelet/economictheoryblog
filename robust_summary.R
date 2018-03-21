@@ -44,13 +44,13 @@ summary.lm <- function (object, correlation = FALSE,
     if(length(cluster)==1){
       dat <- na.omit(get(paste(object$call$data))[,c(n_coef,cluster)])
       if(nrow(dat)<nrow(object$model)){stop("Not all observation have a cluster.")}
-      cluster <- dat[,cluster]
+      cluster_vector <- dat[,cluster]
       require(sandwich, quietly = TRUE)
-      M <- res_length <- length(unique(cluster))
-      N <- length(cluster)
+      M <- res_length <- length(unique(cluster_vector))
+      N <- length(cluster_vector)
       K <- object$rank
       dfc <- (M/(M-1))*((N-1)/(N-K))
-      uj  <- na.omit(apply(estfun(object),2, function(x) tapply(x, cluster, sum)));
+      uj  <- na.omit(apply(estfun(object),2, function(x) tapply(x, cluster_vector, sum)));
       varcovar <- dfc*sandwich(object, meat=crossprod(uj)/N)
       rstdh <- sqrt(diag(varcovar))
     } 
