@@ -42,7 +42,7 @@ summary.lm <- function (object, correlation = FALSE,
     if(length(cluster)>2){stop("The function only allows max. 2 clusters. You provided more.")}
     n_coef <- all.vars(object$call$formula)
     if(length(cluster)==1){
-      dat <- na.omit(eval(object$call$data) [,c(n_coef,cluster)])
+      dat <- na.omit(eval(object$call$data)[,c(n_coef,cluster)])
       if(nrow(dat)<nrow(object$model)){stop("Not all observation have a cluster.")}
       cluster_vector <- dat[,cluster]
       require(sandwich, quietly = TRUE)
@@ -55,12 +55,12 @@ summary.lm <- function (object, correlation = FALSE,
       rstdh <- sqrt(diag(varcovar))
     } 
     if(length(cluster)==2){
-      dat_1 <- na.omit(eval(object$call$data) [,c(n_coef,cluster[1])])
+      dat_1 <- na.omit(eval(object$call$data)[,c(n_coef,cluster[1])])
       if(nrow(dat_1)<nrow(object$model)){stop("Not all observation have a cluster.")}
-      dat_2 <- na.omit(eval(object$call$data) [,c(n_coef,cluster[2])])
+      dat_2 <- na.omit(eval(object$call$data)[,c(n_coef,cluster[2])])
       if(nrow(dat_2)<nrow(object$model)){stop("Not all observation have a cluster.")}
       
-      dat <- na.omit(eval(object$call$data) [,c(n_coef,cluster)])
+      dat <- na.omit(eval(object$call$data)[,c(n_coef,cluster)])
       library(sandwich,quietly = TRUE)
       cluster1 <- dat[,cluster[1]]
       cluster2 <- dat[,cluster[2]]
