@@ -8,3 +8,12 @@ conf <- function(x,conf_level=0.95,distribution="normal"){
   }
   c(mean-error,mean+error)
 }
+
+conf_fix <- function(mean,std,n,conf_level=0.95,distribution="normal"){
+  if(distribution=="normal"){
+    error <- qnorm(1-(1-conf_level)/2)*std/sqrt(n)
+  }else{
+    error <- qt(1-(1-conf_level)/2,df=n-1)*std/sqrt(n)
+  }
+  c(mean-error,mean+error)
+}
